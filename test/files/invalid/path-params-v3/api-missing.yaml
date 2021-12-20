@@ -1,0 +1,44 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: A very simple API (in OpenAPI v3.0 format)
+
+paths:
+  /people/{personRefId}:
+    get:
+      responses:               #  <--  whoops no parameters defined
+        200:
+          description: Returns the list of people
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/people'
+components:
+  schemas:
+    people:
+      title: people
+      type: array
+      items:
+        $ref: '#/components/schemas/person'
+    person:
+      title: Person
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+        birthdate:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+        height:
+          type: number
+        weight:
+          type: number
+

@@ -1,0 +1,46 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: A very simple API (in OpenAPI v3.0 format)
+
+paths:
+  /people/{personRefId}:
+    get:
+      parameters:
+      - name: personRefId
+        in: header             # <--  The parameter isn't in the PATH
+        required: true
+        type: string
+      responses:
+        200:
+          description: Returns the list of people
+          schema:
+            $ref: '#/definitions/people'
+definitions:
+  people:
+    title: people
+    type: array
+    items:
+      $ref: '#/definitions/person'
+  person:
+    title: Person
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        minLength: 1
+      birthdate:
+        type: string
+        format: date
+      gender:
+        type: string
+        enum:
+          - male
+          - female
+      height:
+        type: number
+      weight:
+        type: number
+

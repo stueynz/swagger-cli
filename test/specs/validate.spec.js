@@ -3,7 +3,7 @@
 const helper = require("../fixtures/helper");
 const expect = require("chai").expect;
 
-describe("swagger-cli validate", () => {
+describe("swagger-cli validate (Swagger v2)", () => {
 
   it("should validate a single-file API", () => {
     let output = helper.run("validate", "test/files/valid/single-file/api.yaml");
@@ -86,6 +86,38 @@ describe("swagger-cli validate", () => {
     expect(output.stderr).to.include("Error opening file ");
     expect(output.stderr).to.include("ENOENT: no such file or directory");
     expect(output.stderr).to.include("at ReadFileContext");
+  });
+
+  it("should check for mismatches between URL parameters and path parameters", () => {
+    let output = helper.run("--debug", "validate", "test/files/invalid/path-params/api-in-mismatch.yaml");
+
+    expect(output.stdout).not.to.have.lengthOf(0);
+    expect(output.stderr).to.include("is missing path parameter(s) for {personRefId}");
+    expect(output.status).to.equal(1);
+  });
+
+  it("should check for mismatches between URL parameter names and path parameter names", () => {
+    let output = helper.run("--debug", "validate", "test/files/invalid/path-params/api-name-mismatch.yaml");
+
+    expect(output.stdout).not.to.have.lengthOf(0);
+    expect(output.stderr).to.include("has a path parameter named \"personId\", but there is no corresponding {personId} in the path string");
+    expect(output.status).to.equal(1);
+  });
+
+  it("should check for URL parameter definition being missed out altogether", () => {
+    let output = helper.run("--debug", "validate", "test/files/invalid/path-params/api-missing.yaml");
+
+    expect(output.stdout).not.to.have.lengthOf(0);
+    expect(output.stderr).to.include("is missing path parameter(s) for {personRefId}");
+    expect(output.status).to.equal(1);
+  });
+
+  it("should check for required property name mismatches", () => {
+    let output = helper.run("--debug", "validate", "test/files/invalid/schema/api-required-mismatch.yaml");
+
+    expect(output.stdout).not.to.have.lengthOf(0);
+    expect(output.stderr).to.include("listed as required but does not exist");
+    expect(output.status).to.equal(1);
   });
 
 });
