@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "stueynz/swagger-parser#v3-spec-checks",
+    "ajv": "8.6.3",
     "chalk": "^4.1.0",
     "js-yaml": "^3.14.0",
     "yargs": "^15.4.1"
